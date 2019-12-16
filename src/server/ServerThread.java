@@ -7,15 +7,15 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 /*
- * ä¸€ä¸ªçº¿ç¨‹æœåŠ¡ä¸€ä¸ªç”¨æˆ·
+ * Ò»¸öÏß³Ì·şÎñÒ»¸öÓÃ»§
  * */
 public class ServerThread extends Thread {
-	String hostStr;//æœ¬æœºåœ°å€
-	int port;//æœåŠ¡ç«¯å£
+	String hostStr;//±¾»úµØÖ·
+	int port;//·şÎñ¶Ë¿Ú
 	
-	Socket socket;//æœåŠ¡ç«¯socket
-	BufferedReader in;//ç¼“å­˜æµ
-	PrintStream out;//è¾“å‡º
+	Socket socket;//·şÎñ¶Ësocket
+	BufferedReader in;//»º´æÁ÷
+	PrintStream out;//Êä³ö
 	
 	public ServerThread(Socket _socket) throws IOException {
 		socket=_socket;
@@ -28,10 +28,15 @@ public class ServerThread extends Thread {
 	public void run(){
 		systemMsg("Hello,");
 		systemMsg("You connected to the server successfully.");
+		systemMsg("Your IP:"+socket.getRemoteSocketAddress().toString());
+		systemMsg("Your port:"+socket.getPort());
 		systemMsg("You can talk with others now.");
+		
+		
+		systemMsg("The connect is cancealed.");
 		out.close();
 		
-		//ç»“æŸé€šè®¯
+		//½áÊøÍ¨Ñ¶
 		try {
 			socket.close();
 		} catch (IOException e) {
@@ -39,13 +44,13 @@ public class ServerThread extends Thread {
 		}
 	}
 	
-	//ç³»ç»Ÿæ¶ˆæ¯
+	//ÏµÍ³ÏûÏ¢
 	public void systemMsg(String msg){
 		msg="[System message]"+msg;
 		out.println(msg);
 	}
 	
 	public void privateMsg(String id,String name){
-		//TODO ç§èŠåŠŸèƒ½
+		//TODO Ë½ÁÄ¹¦ÄÜ
 	}
 }

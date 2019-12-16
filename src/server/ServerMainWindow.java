@@ -13,12 +13,23 @@ import javax.swing.JComboBox;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.BevelBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.Console;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ServerMainWindow {
 
+	ChatServer chatServer;//主服务线程
+	
+	
 	private JFrame frame;
-	private JTextPane textField;
+	private JTextPane IPTextField;
 	private JTextField textField_1;
+	private JTextField portTextField;
 
 	/**
 	 * Launch the application.
@@ -47,6 +58,14 @@ public class ServerMainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//创建ChatServer，但是没有参数
+		try {
+			chatServer=new ChatServer();
+		} catch (IOException e1) {
+			// TODO 自动生成的 catch 块
+			e1.printStackTrace();
+		}
+		
 		frame = new JFrame();
 		frame.setTitle("\u670D\u52A1\u7AEF");
 		frame.setBounds(100, 100, 912, 605);
@@ -56,7 +75,7 @@ public class ServerMainWindow {
 		JPanel panel = new JPanel();
 		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel.setToolTipText("\u8FDE\u63A5\u8BBE\u7F6E");
-		panel.setBounds(10, 10, 294, 113);
+		panel.setBounds(10, 10, 367, 113);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -64,26 +83,66 @@ public class ServerMainWindow {
 		label.setBounds(10, 10, 77, 15);
 		panel.add(label);
 		
-		textField = new JTextPane();
-		textField.setBounds(97, 10, 187, 21);
-		panel.add(textField);
+		IPTextField = new JTextPane();
+		IPTextField.setBounds(97, 4, 260, 21);
+		panel.add(IPTextField);
 		
 		JLabel label_1 = new JLabel("\u670D\u52A1\u7AEF\u53E3");
 		label_1.setBounds(10, 35, 77, 15);
 		panel.add(label_1);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setBounds(97, 35, 187, 21);
-		panel.add(textPane);
+		JButton getInterInfoBtn = new JButton("\u83B7\u53D6\u5730\u5740");
+		getInterInfoBtn.setBounds(10, 60, 107, 43);
+		getInterInfoBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			//获得本机IP和程序port
+			public void mouseClicked(MouseEvent e) {			
+				//IP获得与显示
+				try {
+					chatServer.setHostStr(InetAddress.getLocalHost().getHostAddress());
+				} catch (UnknownHostException e1) {
+					// TODO 自动生成的 catch 块
+					e1.printStackTrace();
+				}
+				IPTextField.setText(chatServer.getHostStr());
+				System.out.println("Server IP:"+chatServer.getHostStr());
+			}
+		});
+		panel.add(getInterInfoBtn);
 		
-		JButton btnNewButton = new JButton("\u83B7\u53D6");
-		btnNewButton.setBounds(10, 60, 274, 43);
-		panel.add(btnNewButton);
+		JButton setPortBtn = new JButton("\u8BBE\u7F6E\u7AEF\u53E3");
+		setPortBtn.setBounds(127, 60, 110, 43);
+		setPortBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			//设置端口
+			public void mouseClicked(MouseEvent e) {
+				chatServer.setPort(Integer.valueOf(portTextField.getText()));
+				System.out.println("Server port:"+chatServer.getPort());
+			}
+		});
+		panel.add(setPortBtn);
+		
+		portTextField = new JTextField();
+		portTextField.setBounds(97, 32, 260, 21);
+		panel.add(portTextField);
+		portTextField.setColumns(10);
+		
+		JButton startServerBtn = new JButton("\u5F00\u59CB\u670D\u52A1");
+		startServerBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			//启动服务器
+			public void mouseClicked(MouseEvent e) {
+				chatServer.start();
+				//System.out.println("Debug info:chatServer.run();的下一行");
+			}
+		});
+		startServerBtn.setBounds(247, 60, 110, 43);
+		panel.add(startServerBtn);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_1.setToolTipText("\u7528\u6237\u8BBE\u7F6E");
-		panel_1.setBounds(10, 133, 294, 423);
+		panel_1.setBounds(10, 133, 367, 423);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -92,7 +151,7 @@ public class ServerMainWindow {
 		panel_1.add(label_2);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(91, 7, 193, 21);
+		textField_1.setBounds(91, 7, 94, 21);
 		panel_1.add(textField_1);
 		textField_1.setColumns(10);
 		
@@ -101,13 +160,13 @@ public class ServerMainWindow {
 		panel_1.add(label_3);
 		
 		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setBounds(91, 35, 193, 378);
+		textPane_1.setBounds(91, 35, 266, 378);
 		panel_1.add(textPane_1);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_2.setToolTipText("\u5BF9\u8BDD\u76D1\u542C");
-		panel_2.setBounds(314, 10, 572, 546);
+		panel_2.setBounds(387, 10, 499, 546);
 		frame.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		

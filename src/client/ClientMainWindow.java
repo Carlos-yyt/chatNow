@@ -1,9 +1,11 @@
 package client;
 
 import java.awt.EventQueue;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -11,6 +13,8 @@ import javax.swing.JButton;
 
 public class ClientMainWindow {
 
+	ChatClient chatClient;
+	
 	private JFrame frmChatnow;
 	private JTextField textField;
 
@@ -32,15 +36,24 @@ public class ClientMainWindow {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public ClientMainWindow() {
+	public ClientMainWindow() throws UnknownHostException, IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	private void initialize() {
+	private void initialize() throws UnknownHostException, IOException {
+		//TODO 这里以后应该由登录界面传输参数过来
+		Socket socket=new Socket("192.168.0.105",5000);
+		chatClient=new ChatClient(socket);
+		chatClient.start();
+		
 		frmChatnow = new JFrame();
 		frmChatnow.setTitle("chatNow");
 		frmChatnow.setBounds(100, 100, 524, 628);

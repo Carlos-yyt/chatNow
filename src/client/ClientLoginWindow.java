@@ -76,9 +76,9 @@ public class ClientLoginWindow {
 		panel.add(portTextField);
 		portTextField.setColumns(10);
 		
-		JButton button = new JButton("\u4FDD\u5B58");
-		button.setBounds(10, 122, 227, 23);
-		panel.add(button);
+		JButton ssaveInterInfo = new JButton("\u4FDD\u5B58");
+		ssaveInterInfo.setBounds(10, 122, 227, 23);
+		panel.add(ssaveInterInfo);
 		
 		JTextPane textPane = new JTextPane();
 		textPane.setText("= = =\u8FDE\u63A5\u4FE1\u606F= = =");
