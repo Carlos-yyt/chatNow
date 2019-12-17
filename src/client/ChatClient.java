@@ -27,10 +27,10 @@ public class ChatClient  extends Thread{
 			try {
 				msg=in.readLine();
 			} catch (IOException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 			if (msg!=null) {
+				//TODO 子线程如何刷新ui？
 				System.out.println(msg);
 				msg=null;
 			}

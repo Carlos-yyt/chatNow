@@ -84,6 +84,7 @@ public class ServerMainWindow {
 		panel.add(label);
 		
 		IPTextField = new JTextPane();
+		IPTextField.setEditable(false);
 		IPTextField.setBounds(97, 4, 260, 21);
 		panel.add(IPTextField);
 		
@@ -160,6 +161,7 @@ public class ServerMainWindow {
 		panel_1.add(label_3);
 		
 		JTextPane textPane_1 = new JTextPane();
+		textPane_1.setEditable(false);
 		textPane_1.setBounds(91, 35, 266, 378);
 		panel_1.add(textPane_1);
 		
@@ -171,7 +173,8 @@ public class ServerMainWindow {
 		panel_2.setLayout(null);
 		
 		JTextPane textPane_2 = new JTextPane();
-		textPane_2.setBounds(10, 31, 552, 505);
+		textPane_2.setEditable(false);
+		textPane_2.setBounds(10, 31, 479, 505);
 		panel_2.add(textPane_2);
 		
 		JLabel label_4 = new JLabel("\u5BF9\u8BDD\u76D1\u542C");
