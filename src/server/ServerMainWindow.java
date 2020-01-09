@@ -21,7 +21,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class ServerMainWindow {
+public class ServerMainWindow implements ServerListener{
 
 	ChatServer chatServer;//主服务线程
 	
@@ -62,7 +62,6 @@ public class ServerMainWindow {
 		try {
 			chatServer=new ChatServer();
 		} catch (IOException e1) {
-			// TODO 自动生成的 catch 块
 			e1.printStackTrace();
 		}
 		
@@ -102,7 +101,6 @@ public class ServerMainWindow {
 				try {
 					chatServer.setHostStr(InetAddress.getLocalHost().getHostAddress());
 				} catch (UnknownHostException e1) {
-					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
 				}
 				IPTextField.setText(chatServer.getHostStr());
@@ -124,6 +122,7 @@ public class ServerMainWindow {
 		panel.add(setPortBtn);
 		
 		portTextField = new JTextField();
+		portTextField.setText("5000");
 		portTextField.setBounds(97, 32, 260, 21);
 		panel.add(portTextField);
 		portTextField.setColumns(10);
@@ -180,5 +179,10 @@ public class ServerMainWindow {
 		JLabel label_4 = new JLabel("\u5BF9\u8BDD\u76D1\u542C");
 		label_4.setBounds(255, 10, 54, 15);
 		panel_2.add(label_4);
+	}
+
+	@Override
+	public void getGroupMsg(String msg) {
+		// TODO 服务器也要监听，更新ui
 	}
 }

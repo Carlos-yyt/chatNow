@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -13,18 +12,20 @@ import javax.swing.JTextPane;
 import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.sun.net.ssl.internal.www.protocol.https.Handler;
 
-import jdk.internal.org.objectweb.asm.Handle;
-import server.User;
-
+import chatNow.User;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ClientLoginWindow {
 
 	ChatClient chatClient;
+	User _user;
+	
+	ClientMainWindow chatWindow;//聊天界面
 	
 	private JFrame frame;
 	private JTextField IPTextField;
@@ -35,9 +36,10 @@ public class ClientLoginWindow {
 	//接收子线程的 更新ui 的请求
 	final Handler handler=new Handler(){
 		public void handleMessage(Message msg) {
-			
+			//TODO 接收子线程的 更新ui 的请求
 		}
 	};
+	private JTextField nameTextField;
 	
 	/**
 	 * Launch the application.
@@ -84,6 +86,7 @@ public class ClientLoginWindow {
 		panel.add(lblNewLabel);
 		
 		IPTextField = new JTextField();
+		IPTextField.setText("192.168.0.104");
 		IPTextField.setBounds(10, 35, 227, 21);
 		panel.add(IPTextField);
 		IPTextField.setColumns(10);
@@ -94,6 +97,7 @@ public class ClientLoginWindow {
 		panel.add(lblNewLabel_1);
 		
 		portTextField = new JTextField();
+		portTextField.setText("5000");
 		portTextField.setBounds(10, 91, 227, 21);
 		panel.add(portTextField);
 		portTextField.setColumns(10);
@@ -101,20 +105,20 @@ public class ClientLoginWindow {
 		JButton ssaveInterInfo = new JButton("\u8FDE\u63A5\u670D\u52A1\u5668");
 		ssaveInterInfo.addMouseListener(new MouseAdapter() {
 			@Override
+			//创建套接字
 			public void mouseClicked(MouseEvent e) {
 				Socket socket=null;
 				try {
 					socket=new Socket(IPTextField.getText(),Integer.valueOf(portTextField.getText()));
 				} catch (NumberFormatException | IOException e1) {
-					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
 				}
 				try {
-					chatClient=new ChatClient(socket);
+					chatClient=new ChatClient(socket);//创建服务进程
 				} catch (IOException e1) {
-					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
 				}
+				System.out.println("Create socket successfully.");
 				chatClient.start();
 				
 			}
@@ -159,11 +163,51 @@ public class ClientLoginWindow {
 		panel_1.add(accountInfoTextPane);
 		
 		JButton signUpBtn = new JButton("\u6CE8\u518C");
-		signUpBtn.setBounds(10, 122, 99, 90);
+		signUpBtn.setBounds(10, 173, 99, 39);
 		panel_1.add(signUpBtn);
 		
 		JButton logInBtn = new JButton("\u767B\u5F55");
-		logInBtn.setBounds(119, 122, 106, 90);
+		logInBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			//登录
+			public void mouseClicked(MouseEvent e) {
+				char[] pswChar=passwordField.getPassword();
+				String pswStr=new String(pswChar);
+				
+				_user=new User(chatClient.getPort(),chatClient.getHostStr(),idTextField.getText(),nameTextField.getText(),pswStr);;
+				
+				System.out.println("Your id is :"+_user.getId());
+				System.out.println("Your password is :"+_user.getPassword());
+				System.out.println("Your name is :"+_user.getName());
+				
+				chatClient.setUser(_user);
+				
+				chatClient.login();
+				if (chatClient.isLogin()==true) {
+					try {
+						//登陆成功 跳转窗口
+						chatWindow=new ClientMainWindow(chatClient);
+						chatWindow.frmChatnow.setVisible(true);
+						frame.setVisible(false);
+					} catch (UnknownHostException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		logInBtn.setBounds(119, 173, 106, 39);
 		panel_1.add(logInBtn);
+		
+		JLabel label_1 = new JLabel("\u8BF7\u8F93\u5165\u6635\u79F0");
+		label_1.setEnabled(false);
+		label_1.setBounds(10, 122, 215, 15);
+		panel_1.add(label_1);
+		
+		nameTextField = new JTextField();
+		nameTextField.setBounds(10, 142, 215, 21);
+		panel_1.add(nameTextField);
+		nameTextField.setColumns(10);
 	}
 }

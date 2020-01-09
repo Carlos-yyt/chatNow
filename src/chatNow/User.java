@@ -1,4 +1,4 @@
-package server;
+package chatNow;
 
 public class User {
 	private int port;//∂Àø⁄∫≈
@@ -8,7 +8,7 @@ public class User {
 	private String name;//Í«≥∆£¨‘ –Ì÷ÿ∏¥
 	private String password;//’À∫≈
 	
-	User(int _port,String _hostStr,String _id,String _name,String _password){
+	public User(int _port,String _hostStr,String _id,String _name,String _password){
 		this.setPort(_port);
 		this.setHostStr(_hostStr);
 		this.setId(_id);
